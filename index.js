@@ -19,7 +19,7 @@ app.use(assignBody)
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 
-let persons = [
+let people = [
     {
       name: "Ada Lovelace",
       number: "123",
@@ -40,14 +40,14 @@ app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
   })
   
-app.get('/api/persons', (request, response) => {
-    response.json(persons)
+app.get('/api/people', (request, response) => {
+    response.json(people)
     
   })
     
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/people/:id', (request, response) => {
     const id = request.params.id
-    const person = persons.find(person => person.id === id)
+    const person = people.find(person => person.id === id)
 
     if (person) {
         response.json(person)
@@ -60,15 +60,15 @@ app.get('/api/persons/:id', (request, response) => {
 app.get('/info', (request, response) => {
     const currentTime = new Date();
     console.log((currentTime))
-    response.send(`<p>Phonebook has info for ${persons.length} people</p>
+    response.send(`<p>Phonebook has info for ${people.length} people</p>
         <p>${currentTime}</p>`
 
     )
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/people/:id', (request, response) => {
     const id = request.params.id
-    persons = persons.filter(person => person.id !== id)
+    people = people.filter(person => person.id !== id)
     response.status(204).end()
 
 })
@@ -77,9 +77,9 @@ const generateId = () => {
     return String(randomID)
   }
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/people', (request, response) => {
     const body = request.body
-    const duplicateName = persons.find(person => person.name === body.name)
+    const duplicateName = people.find(person => person.name === body.name)
 
     if (!body.name || !body.number) {
       return response.status(400).json({ 
@@ -97,7 +97,7 @@ app.post('/api/persons', (request, response) => {
       id: generateId(),
     }
   
-    persons = persons.concat(person)
+    people = people.concat(person)
   
     response.json(person)
     morgan.token('type', function (request, response) { return req.headers['content-type'] })
