@@ -3,7 +3,7 @@ const app = express()
 app.use(express.json())
 
 
-let notes = [
+let persons = [
     {
       name: "Ada Lovelace",
       number: "123",
@@ -25,14 +25,26 @@ app.get('/', (request, response) => {
   })
   
 app.get('/api/persons', (request, response) => {
-    response.json(notes)
+    response.json(persons)
+    
+  })
+    
+app.get('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    const person = persons.find(person => person.id === id)
+
+    if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
   })
 
 
 app.get('/info', (request, response) => {
     const currentTime = new Date();
     console.log((currentTime))
-    response.send(`<p>Phonebook has info for ${notes.length} people</p>
+    response.send(`<p>Phonebook has info for ${persons.length} people</p>
         <p>${currentTime}</p>`
 
     )
