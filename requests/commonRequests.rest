@@ -3,3 +3,12 @@ GET http://localhost:3001/api/persons
 ###
 
 DELETE http://localhost:3001/api/persons/100
+
+###
+POST http://localhost:3001/api/persons
+content-type: application/json
+
+{
+    "name": "bbc",
+    "number": "123"
+}
