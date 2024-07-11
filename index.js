@@ -41,9 +41,17 @@ app.get('/api/people', (request, response) => {
     
 app.get('/api/people/:id', (request, response) => {
     const id = request.params.id
-    
-    Person.findById(request.params.id).then(person => {
-        response.json(person)
+    Person.findById(request.params.id)
+    .then(person => {
+        if (person) {
+            response.json(person)
+        } else {
+            response.status(400).end()
+        }
+    })
+    .catch(error => {
+        console.log(error)
+        response.status(400).send({ error: 'malformatted id' })
     }) 
 
   })
@@ -59,9 +67,10 @@ app.get('/info', (request, response) => {
 })
 
 app.delete('/api/people/:id', (request, response) => {
-    const id = request.params.id
-    people = people.filter(person => person.id !== id)
-    response.status(204).end()
+    Person.findByIdAndDelete(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
 
 })
 /*const generateId = () => {
