@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
-app.use(express.json())
+require('dotenv').config()
+
 var morgan = require('morgan')
 const cors = require('cors')
+app.use(express.json())
 app.use(cors())
 app.use(express.static('dist'))
 
@@ -18,42 +20,32 @@ const assignBody = (request, response, next) => {
 app.use(assignBody)
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-
-let people = [
-    {
-      name: "Ada Lovelace",
-      number: "123",
-      id: "2"
-    },
-    {
-      name: "Dan Abramov",
-      number: "12-43-234345",
-      id: "3"
-    },
-    {
-      name: "Mary Poppendieck",
-      number: "39-23-6423122",
-      id: "4"
-    }
-  ]
 app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
   })
   
+const Person = require('./models/person')
+
+let people = [
+
+]
+
+
 app.get('/api/people', (request, response) => {
-    response.json(people)
-    
+    console.log(Person)
+    Person.find({}).then(people => {
+        console.log(people)
+        response.json(people)
+      })    
   })
     
 app.get('/api/people/:id', (request, response) => {
     const id = request.params.id
-    const person = people.find(person => person.id === id)
-
-    if (person) {
+    
+    Person.findById(request.params.id).then(person => {
         response.json(person)
-      } else {
-        response.status(404).end()
-      }
+    }) 
+
   })
 
 
@@ -72,10 +64,10 @@ app.delete('/api/people/:id', (request, response) => {
     response.status(204).end()
 
 })
-const generateId = () => {
+/*const generateId = () => {
     const randomID = Math.random(10000000)
     return String(randomID)
-  }
+  }*/
 
 app.post('/api/people', (request, response) => {
     const body = request.body
@@ -91,20 +83,19 @@ app.post('/api/people', (request, response) => {
             error: 'name must be unique'  
           })
     }
-    const person = {
+    const person = new Person({
       name: body.name,
-      number: body.number,
-      id: generateId(),
-    }
+      number: body.number
+    })
   
-    people = people.concat(person)
-  
-    response.json(person)
+    person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
     morgan.token('type', function (request, response) { return req.headers['content-type'] })
 
 })
   
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
   })

@@ -1,12 +1,12 @@
 
-GET https://fullstackopenpart3render.onrender.com/api/persons
+GET http://localhost:3001/api/people
 
 ###
 
-DELETE http://localhost:3001/api/persons/100
+DELETE http://localhost:3001/api/people/100
 
 ###
-POST https://fullstackopenpart3render.onrender.com/api/persons
+POST http://localhost:3001/api/people
 content-type: application/json
 
 {
