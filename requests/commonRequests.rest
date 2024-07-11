@@ -12,3 +12,16 @@ content-type: application/json
     "name": "bbc",
     "number": "123"
 }
+### Testing put error nessage
+PUT http://localhost:3001/api/people/668f0c4d433e4c3516b4291
+content-type: application/json
+
+{
+    "name": "xd",
+    "number": "13"
+}
+### Test getting sepcific person from the server
+GET  http://localhost:3001/api/people/668f0c4d433e4c3516b42919
+
+### Test info request
+GET  http://localhost:3001/info

@@ -50,9 +50,7 @@ let people = [
 
 
 app.get('/api/people', (request, response) => {
-    console.log(Person)
     Person.find({}).then(people => {
-        console.log(people)
         response.json(people)
       })    
   })
@@ -74,11 +72,13 @@ app.get('/api/people/:id', (request, response, next) => {
 
 app.get('/info', (request, response) => {
     const currentTime = new Date();
-    console.log((currentTime))
-    response.send(`<p>Phonebook has info for ${people.length} people</p>
-        <p>${currentTime}</p>`
+    Person.find({}).then(people => {
+        console.log((currentTime))
+        response.send(`<p>Phonebook has info for ${people.length} people</p>
+            <p>${currentTime}</p>`
 
     )
+})
 })
 
 app.delete('/api/people/:id', (request, response, next) => {
@@ -115,6 +115,23 @@ app.post('/api/people', (request, response) => {
     morgan.token('type', function (request, response) { return req.headers['content-type'] })
 
 })
+
+app.put('/api/people/:id', (request, response, next) => {
+    const body = request.body
+    console.log("body")
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, { new: true})
+    .then(updatedNote => {
+        response.json(updatedNote)
+    })
+    .catch(error => next(error))
+
+})
+
   
 app.use(unknownEndpoint)
 app.use(errorHandler)
