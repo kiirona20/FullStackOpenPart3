@@ -1,2 +1,2 @@
 Link to site: 
-https://fullstackopenpart3render.onrender.com/api/people
+https://fullstackopenpart3render.onrender.com
